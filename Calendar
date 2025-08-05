@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(CalendarApp());
+}
+
+class CalendarApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: CalendarScreen(),
+    );
+  }
+}
+
+class CalendarScreen extends StatelessWidget {
+  final List<String> daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.red.shade800, Colors.red.shade400],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Back and Calendar Text
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_back, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'Calendar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontFamily: 'RobotoMono',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 30),
+
+              // Calendar Icon + Month
+              Icon(Icons.calendar_month, size: 80, color: Colors.white),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'July 2025',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                  SizedBox(width: 5),
+                  Icon(Icons.arrow_drop_down, color: Colors.white),
+                ],
+              ),
+              SizedBox(height: 10),
+
+              // Calendar Grid
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    // Days of the week
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: daysOfWeek
+                          .map((day) => Expanded(
+                                child: Center(
+                                  child: Text(
+                                    day,
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                    SizedBox(height: 8),
+
+                    // Calendar Dates
+                    Column(
+                      children: List.generate(5, (rowIndex) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: List.generate(7, (colIndex) {
+                            int day = rowIndex * 7 + colIndex + 1 - 1;
+                            if (day < 1 || day > 31) return Expanded(child: Center(child: Text("")));
+                            return Expanded(
+                              child: Center(
+                                child: Text(
+                                  day.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              // Selected Date
+              Text(
+                'Saturday, July 05, 2025',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+
+              Spacer(),
+
+              // Add Button
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.add, color: Colors.red, size: 30),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
