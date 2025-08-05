@@ -1,0 +1,200 @@
+import 'package:flutter/material.dart';
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  bool _agree = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Top Header
+            Stack(
+              children: [
+                Container(
+                  height: 200,
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(100),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  left: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            const Text(
+              "Create new\nAccount",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 20),
+
+            // First & Last Name
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Row(
+                children: [
+                  Expanded(child: _buildTextField(label: "First Name")),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildTextField(label: "Last Name")),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 15),
+            _buildTextField(label: "EMAIL"),
+
+            const SizedBox(height: 15),
+            _buildTextField(
+              label: "PASSWORD",
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(height: 15),
+            _buildTextField(
+              label: "CONFIRM PASSWORD",
+              obscureText: _obscureConfirmPassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: _agree,
+                    onChanged: (value) {
+                      setState(() {
+                        _agree = value!;
+                      });
+                    },
+                  ),
+                  const Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "I Agree with ",
+                        children: [
+                          TextSpan(
+                            text: "privacy",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          TextSpan(text: " and "),
+                          TextSpan(
+                            text: "policy",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  // TODO: Handle sign up logic
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                child: const Text("Sign up", style: TextStyle(fontSize: 16)),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Already have an account ? "),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context); // Go back to login
+                  },
+                  child: const Text(
+                    "Sign In",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    bool obscureText = false,
+    Widget? suffixIcon,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: TextField(
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: Colors.grey[200],
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+          suffixIcon: suffixIcon,
+        ),
+      ),
+    );
+  }
+}
