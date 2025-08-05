@@ -1,0 +1,248 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
+class WeatherPage extends StatefulWidget {
+  const WeatherPage({Key? key}) : super(key: key);
+
+  @override
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  String city = 'Manila'; // Default city
+  bool isLoading = false;
+  String? error;
+
+  double? temperature;
+  String? description;
+  double? feelsLike;
+  double? tempMin;
+
+  final String apiKey = '3d57941346886293c02fb7e38e073145';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWeather(city);
+  }
+
+  Future<void> fetchWeather(String cityName) async {
+    setState(() {
+      isLoading = true;
+      error = null;
+    });
+
+    final url = Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKey&units=metric');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          city = data['name'];
+          temperature = data['main']['temp'].toDouble();
+          feelsLike = data['main']['feels_like'].toDouble();
+          tempMin = data['main']['temp_min'].toDouble();
+          description = data['weather'][0]['main'];
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          error = 'City not found.';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = 'Error: $e';
+        isLoading = false;
+      });
+    }
+  }
+
+  void _showCityInputDialog() {
+    final cityController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Enter city name'),
+        content: TextField(
+          controller: cityController,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'City name',
+          ),
+          onSubmitted: (value) {
+            _submitCity(value);
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _submitCity(cityController.text);
+            },
+            child: const Text('Search'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submitCity(String input) {
+    final inputTrimmed = input.trim();
+    if (inputTrimmed.isNotEmpty) {
+      Navigator.pop(context);
+      fetchWeather(inputTrimmed);
+    }
+  }
+
+  Widget buildIconText(IconData icon, String label) {
+    return Column(
+      children: [
+        Icon(icon, size: 36, color: Colors.black),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(fontSize: 14)),
+      ],
+    );
+  }
+
+  Widget _getWeatherIcon(String? desc) {
+    if (desc == null) {
+      return const Icon(Icons.cloud, size: 150, color: Colors.black);
+    }
+    switch (desc.toLowerCase()) {
+      case 'rain':
+      case 'drizzle':
+      case 'thunderstorm':
+        return Column(
+          children: const [
+            Icon(Icons.cloud, size: 150, color: Colors.black),
+            SizedBox(height: 8),
+            Icon(Icons.grain, size: 40, color: Colors.blue), 
+          ],
+        );
+      case 'clear':
+        return const Icon(Icons.wb_sunny, size: 150, color: Colors.orange);
+      case 'clouds':
+        return const Icon(Icons.cloud, size: 150, color: Colors.black);
+      default:
+        return const Icon(Icons.cloud, size: 150, color: Colors.black);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dateString = DateFormat('EEEE, d MMMM').format(DateTime.now());
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.green),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        'Weather today',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(width: 48),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              
+              Expanded(
+                child: Center(
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : error != null
+                      ? Text(error!, style: const TextStyle(color: Colors.red))
+                      : SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: _showCityInputDialog,
+                          child: Text(
+                            city,
+                            style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _getWeatherIcon(description),
+                        const SizedBox(height: 8),
+                        Text(
+                          dateString,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          '${temperature?.toStringAsFixed(1) ?? '-'} °C',
+                          style: const TextStyle(fontSize: 48),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          description?.toUpperCase() ?? '-',
+                          style: const TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              if (!isLoading && error == null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildIconText(Icons.thermostat_outlined,
+                          '${tempMin?.toStringAsFixed(1) ?? '-'}°C\nLow'),
+                      buildIconText(Icons.emoji_people_outlined,
+                          '${feelsLike?.toStringAsFixed(1) ?? '-'}°C\nFeels Like'),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
