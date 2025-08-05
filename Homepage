@@ -1,0 +1,115 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Red Navigation App',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static List<Widget> _pages = <Widget>[
+    Center(child: Text('Calendar Page', style: TextStyle(color: Colors.white))),
+    Center(child: Text('Add Page', style: TextStyle(color: Colors.white))),
+    Center(child: Text('Cloud Page', style: TextStyle(color: Colors.white))),
+    Center(child: Text('Profile Page', style: TextStyle(color: Colors.white))),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final gradient = const LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFF7B1FA2), Color(0xFFD32F2F)],
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.red[900]!, Colors.red],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              // Main Page Content
+              Center(child: _pages.elementAt(_selectedIndex)),
+
+              // Top Bar
+              Positioned(
+                top: 16,
+                left: 16,
+                right: 16,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.menu, color: Colors.white, size: 30),
+                    Icon(Icons.search, color: Colors.white, size: 30),
+                  ],
+                ),
+              ),
+
+              // Bottom Navigation Bar
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      navIcon(Icons.calendar_month, 0),
+                      navIcon(Icons.add_circle_outline, 1),
+                      navIcon(Icons.cloud_outlined, 2),
+                      navIcon(Icons.person_outline, 3),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget navIcon(IconData icon, int index) {
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: Icon(
+        icon,
+        size: 32,
+        color: _selectedIndex == index ? Colors.white : Colors.white70,
+      ),
+    );
+  }
+}
