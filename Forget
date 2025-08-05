@@ -1,0 +1,112 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(ForgotPasswordApp());
+}
+
+class ForgotPasswordApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ForgotPasswordScreen(),
+    );
+  }
+}
+
+class ForgotPasswordScreen extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          // Top Red Container with Curved Shape
+          ClipPath(
+            clipper: TopClipper(),
+            child: Container(
+              color: Colors.red[800],
+              height: 200,
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: const Text(
+                'Forgot Password',
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 40),
+
+          // Email Input
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                hintText: 'Enter your Email Address',
+                filled: true,
+                fillColor: Colors.grey[300],
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 16.0, horizontal: 20.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Forgot Password Button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add your forgot password logic here
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red[800],
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Forgot Password',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Custom Clipper for top curved red background
+class TopClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 50);
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height - 50);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
