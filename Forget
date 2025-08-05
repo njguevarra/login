@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(ForgotPasswordApp());
-}
-
-class ForgotPasswordApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ForgotPasswordScreen(),
-    );
-  }
-}
+import 'reset.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -23,7 +10,6 @@ class ForgotPasswordScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Top Red Container with Curved Shape
           ClipPath(
             clipper: TopClipper(),
             child: Container(
@@ -33,18 +19,11 @@ class ForgotPasswordScreen extends StatelessWidget {
               alignment: Alignment.center,
               child: const Text(
                 'Forgot Password',
-                style: TextStyle(
-                  fontSize: 28,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(fontSize: 28, color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ),
           ),
-
           const SizedBox(height: 40),
-
-          // Email Input
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: TextField(
@@ -53,8 +32,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 hintText: 'Enter your Email Address',
                 filled: true,
                 fillColor: Colors.grey[300],
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 16.0, horizontal: 20.0),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide.none,
@@ -62,29 +40,24 @@ class ForgotPasswordScreen extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // Forgot Password Button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Add your forgot password logic here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ResetPasswordScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red[800],
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text(
-                  'Forgot Password',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
+                child: const Text('Forgot Password', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ),
           ),
@@ -94,14 +67,12 @@ class ForgotPasswordScreen extends StatelessWidget {
   }
 }
 
-// Custom Clipper for top curved red background
 class TopClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height - 50);
+    path.quadraticBezierTo(size.width / 2, size.height, size.width, size.height - 50);
     path.lineTo(size.width, 0);
     path.close();
     return path;
