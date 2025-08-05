@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
-import 'signup_page.dart'; // Import your SignUpPage here
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login UI',
-      debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
-    );
-  }
-}
+import 'signup_page.dart';
+import 'forget.dart';
+import 'homepage.dart'; // Add this import
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top Red Header with Icon
             Container(
               height: 300,
               decoration: const BoxDecoration(
@@ -56,121 +40,63 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
-            const Text(
-              "Login",
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-
+            const Text("Login", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
-
-            _buildInputField(
-              label: "USERNAME",
-              icon: Icons.person,
-              obscureText: false,
-            ),
-
+            _buildInputField(label: "USERNAME", icon: Icons.person),
             const SizedBox(height: 15),
-
             _buildInputField(
               label: "PASSWORD",
               icon: Icons.lock,
               obscureText: _obscurePassword,
               suffixIcon: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                ),
+                icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
                 onPressed: () {
                   setState(() => _obscurePassword = !_obscurePassword);
                 },
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Row(
                 children: [
                   Checkbox(
                     value: _rememberMe,
-                    onChanged: (value) {
-                      setState(() {
-                        _rememberMe = value!;
-                      });
-                    },
+                    onChanged: (value) => setState(() => _rememberMe = value!),
                   ),
                   const Text("Remember me"),
                   const Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                      );
+                    },
                     child: const Text("Forgot Password?"),
                   ),
                 ],
               ),
             ),
-
-            _buildButton("Log in", Colors.red),
-
+            _buildButton("Log in", Colors.red, onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            }),
             const SizedBox(height: 10),
-
-            _buildButton(
-              "Sign Up",
-              Colors.red,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignUpPage()),
-                );
-              },
-            ),
-
-            const SizedBox(height: 20),
-
-            const Text("Or Sign in with"),
-
-            const SizedBox(height: 10),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildSocialIcon(
-                  'https://cdn-icons-png.flaticon.com/512/733/733547.png',
-                ), // Facebook
-                const SizedBox(width: 10),
-                _buildSocialIcon(
-                  'https://cdn-icons-png.flaticon.com/512/281/281764.png',
-                ), // Google
-                const SizedBox(width: 10),
-                _buildSocialIcon(
-                  'https://cdn-icons-png.flaticon.com/512/174/174855.png',
-                ), // Instagram
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Don’t have an account ? "),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignUpPage(),
-                      ),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpPage()));
                   },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(color: Colors.red),
-                  ),
+                  child: const Text("Sign Up", style: TextStyle(color: Colors.red)),
                 ),
               ],
             ),
-
             const SizedBox(height: 30),
           ],
         ),
@@ -209,266 +135,9 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: color,
           foregroundColor: Colors.white,
           minimumSize: const Size.fromHeight(50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         child: Text(text, style: const TextStyle(fontSize: 16)),
-      ),
-    );
-  }
-
-  Widget _buildSocialIcon(String imageUrl) {
-    return CircleAvatar(
-      backgroundImage: NetworkImage(imageUrl),
-      radius: 20,
-      backgroundColor: Colors.transparent,
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SIGNUP
-
-import 'package:flutter/material.dart';
-
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
-
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
-
-  bool _agree = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Top Header
-            Stack(
-              children: [
-                Container(
-                  height: 200,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(100),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 40,
-                  left: 20,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            const Text(
-              "Create new\nAccount",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 20),
-
-            // First & Last Name
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Row(
-                children: [
-                  Expanded(child: _buildTextField(label: "First Name")),
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildTextField(label: "Last Name")),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 15),
-            _buildTextField(label: "EMAIL"),
-
-            const SizedBox(height: 15),
-            _buildTextField(
-              label: "PASSWORD",
-              obscureText: _obscurePassword,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-            ),
-
-            const SizedBox(height: 15),
-            _buildTextField(
-              label: "CONFIRM PASSWORD",
-              obscureText: _obscureConfirmPassword,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscureConfirmPassword
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
-                },
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Row(
-                children: [
-                  Checkbox(
-                    value: _agree,
-                    onChanged: (value) {
-                      setState(() {
-                        _agree = value!;
-                      });
-                    },
-                  ),
-                  const Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        text: "I Agree with ",
-                        children: [
-                          TextSpan(
-                            text: "privacy",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          TextSpan(text: " and "),
-                          TextSpan(
-                            text: "policy",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // TODO: Handle sign up logic
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size.fromHeight(50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                child: const Text("Sign up", style: TextStyle(fontSize: 16)),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Already have an account ? "),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context); // Go back to login
-                  },
-                  child: const Text(
-                    "Sign In",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 30),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String label,
-    bool obscureText = false,
-    Widget? suffixIcon,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-      child: TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.grey[200],
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-          suffixIcon: suffixIcon,
-        ),
       ),
     );
   }
