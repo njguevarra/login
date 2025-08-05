@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(ResetPasswordApp());
-}
-
-class ResetPasswordApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ResetPasswordScreen(),
-    );
-  }
-}
+import 'homepage.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   @override
@@ -29,7 +16,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // Red header with curve and title
           ClipPath(
             clipper: TopClipper(),
             child: Container(
@@ -39,18 +25,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               alignment: Alignment.center,
               child: const Text(
                 'Reset Password',
-                style: TextStyle(
-                  fontSize: 28,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(fontSize: 28, color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ),
           ),
-
           const SizedBox(height: 40),
-
-          // Password input
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
@@ -62,11 +41,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: '',
                     filled: true,
                     fillColor: Colors.grey[300],
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide.none,
@@ -74,18 +51,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 const Text("Confirm Password*"),
                 const SizedBox(height: 8),
                 TextField(
                   controller: confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: '',
                     filled: true,
                     fillColor: Colors.grey[300],
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide.none,
@@ -95,29 +69,41 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               ],
             ),
           ),
-
           const SizedBox(height: 30),
-
-          // Reset Password button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Add your reset password logic here
+                  // Save password logic only (no navigation)
+                  String password = passwordController.text;
+                  String confirmPassword = confirmPasswordController.text;
+
+                  if (password.isEmpty || confirmPassword.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Please fill in both fields")),
+                    );
+                  } else if (password != confirmPassword) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Passwords do not match")),
+                    );
+                  } else {
+                    // Simulate successful save
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Password has been reset")),
+                    );
+                    // Clear fields
+                    passwordController.clear();
+                    confirmPasswordController.clear();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red[800],
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text(
-                  'Reset Password',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
+                child: const Text('Save Password', style: TextStyle(fontSize: 18, color: Colors.white)),
               ),
             ),
           ),
@@ -127,14 +113,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 }
 
-// Custom curved top clipper
 class TopClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
     path.lineTo(0, size.height - 50);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height - 50);
+    path.quadraticBezierTo(size.width / 2, size.height, size.width, size.height - 50);
     path.lineTo(size.width, 0);
     path.close();
     return path;
