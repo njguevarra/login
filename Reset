@@ -1,0 +1,55 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(ResetPasswordApp());
+}
+
+class ResetPasswordApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ResetPasswordScreen(),
+    );
+  }
+}
+
+class ResetPasswordScreen extends StatefulWidget {
+  @override
+  _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          // Red header with curve and title
+          ClipPath(
+            clipper: TopClipper(),
+            child: Container(
+              color: Colors.red[800],
+              height: 200,
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: const Text(
+                'Reset Password',
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 40),
+
+          // Password input
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
